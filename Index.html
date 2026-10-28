@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Camera Prank 😂</title>
+  <style>
+    body {
+      background: #101010;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 25px 15px;
+    }
+    button {
+      padding: 14px 20px;
+      border: 0;
+      border-radius: 10px;
+      background: #20d67b;
+      color: #101010;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 8px;
+    }
+    video {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 14px;
+      margin-top: 18px;
+    }
+    #surprise { color: #20d67b; }
+  </style>
+</head>
+<body>
+  <h1>📸 Camera Prank</h1>
+  <p>Allow your camera for a harmless prank!</p>
+
+  <button id="start">Open Camera</button>
+  <video id="camera" autoplay playsinline hidden></video>
+
+  <div id="surprise"></div>
+
+  <script>
+    const button = document.getElementById("start");
+    const video = document.getElementById("camera");
+    const surprise = document.getElementById("surprise");
+    let stream;
+
+    button.addEventListener("click", async () => {
+      try {
+        stream = await navigator.mediaDevices
+          .getUserMedia({
+            video: { facingMode: "user" },
+            audio: false
+          });
+
+        video.srcObject = stream;
+        video.hidden = false;
+        button.textContent = "Reveal Surprise 😂";
+
+        button.onclick = () => {
+          surprise.innerHTML =
+            "<h2>😂 YOU GOT PRANKED!</h2>" +
+            "<p>Your friend owes you one!</p>";
+
+          stream.getTracks().forEach(track => track.stop());
+          video.srcObject = null;
+          video.hidden = true;
+          button.disabled = true;
+        };
+      } catch (error) {
+        surprise.textContent =
+          "Camera unavailable or permission denied.";
+      }
+    });
+  </script>
+</body>
+</html>
